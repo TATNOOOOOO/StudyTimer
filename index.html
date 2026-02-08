@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&family=Geo:ital@0;1&family=Major+Mono+Display&family=Offside&family=Plaster&family=Quantico:ital,wght@0,400;0,700;1,400;1,700&family=Ribeye+Marrow&family=Share+Tech&family=Tourney:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <title>Study Timer</title>
+</head>
+<header>
+    <h1>Study Timer</h1>
+</header>
+<body>
+    <!-- タイマー部分 -->
+    <section id="Timer">
+        <p id="Timer-txt"></p>
+    </section>
+    <section class="TimePassed">
+        <p class="SubTxt TimePassedTxt"></p>
+    </section>
+    <div class="gauge"><div class="gauge-value"></div></div>
+    <input type="button" id="TBtn" value="Start">
+    <p class="SubTxt float">
+        Settings↓
+    </p>
+    <!-- ここから設定 -->
+    <section id="Settings">
+        <h5>Count</h5>
+        <section class="checkbox">
+            <input class="checkbox-icon box" type="radio" name="Count-R" id="radio-D" checked >Count Down
+            <input class="checkbox-icon box" type="radio" name="Count-R" id="radio-U">Count Up
+        </section>
+
+        <h5>Time</h5>
+        <!-- カウントダウン（デフォルト表示） -->
+        <section class="checkbox CountDown">
+            <a>Study Time(Min):</a>
+            <input class="text" type="text" id="StudyTime" value="25">
+            <br>
+            <a>Rest Time(Min):</a>
+            <input class="text" type="text" id="RestTime" value="5">
+        </section>
+
+        <!-- カウントアップ（デフォルトでは非表示） -->
+        <section class="checkbox CountUp">
+            <a>Goal(Min):</a>
+            <input class="text" type="text" name="Count" id="Goal" value="300">
+        </section>
+
+        <!-- こっから別にどうでもいいコンフィグ -->
+        <!-- フォント設定 -->
+        <h5>Font</h5>
+        <section class="checkbox Fonts">
+            <label class="font-option ShareTech">
+                <input type="radio" name="font" value="ShareTech" id="ShareTech" checked>
+                Share tech(Defalut)
+            </label>
+            <label class="font-option Quantico">
+                <input type="radio" name="font" value="Quantico" id="Quantico">
+                Quantico
+            </label>
+            <label class="font-option Geo">
+                <input type="radio" name="font" value="Geo" id="Geo">
+                Geo
+            </label>
+            <label class="font-option MajorMonoDisplay">
+                <input type="radio" name="font" value="MajorMonoDisplay" id="MajorMonoDisplay">
+                Major Mono Display
+            </label>
+            <label class="font-option Offside">
+                <input type="radio" name="font" value="Offside" id="Offside">
+                Offside
+            </label>
+            <label class="font-option Plaster">
+                <input type="radio" name="font" value="Plaster" id="Plaster">
+                Plaster
+            </label>
+            <label class="font-option RibeyeMarrow">
+                <input type="radio" name="font" value="RibeyeMarrow" id="RibeyeMarrow">
+                Ribeye Marrow
+            </label>
+        </section>
+
+        <!-- Handfree Mode -->
+        <h5>Handfree Mode</h5>
+        <section class="checkbox">
+            <input class="checkbox-icon box" type="radio" name="Handfree" id="EnableHF">Enable
+            <input class="checkbox-icon box" type="radio" name="Handfree" id="DisableHF" checked>Disable
+        </section>
+
+    </section>
+    <script src="./code.js"></script>
+</body>
+</html>
