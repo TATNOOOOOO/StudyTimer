@@ -46,6 +46,7 @@ function loadData() {
 window.addEventListener("load", () => {
   if (localStorage.getItem("Settings") !== null) {
     loadData();
+    changeFont();
   }
 });
 
@@ -352,22 +353,16 @@ CBtn.addEventListener("click", () => {
 });
 
 //データのあれこれ
-//保存の変数
-const Dcount = document.querySelector('input[name="Count-R"]:checked').id;
-const Dfont = document.querySelector('input[name="font"]:checked').id;
-const DHF = document.querySelector('input[name="Handfree"]:checked').id;
-
 function saveData() {
-  var obj = {
-    Count: Dcount,
-    STime: STime,
-    RTime: RTime,
-    GTime: GTime,
-    Font: Dfont,
-    HF: DHF
+  const obj = {
+    Count: document.querySelector('input[name="Count-R"]:checked')?.id,
+    STime: document.getElementById("StudyTime").value,
+    RTime: document.getElementById("RestTime").value,
+    GTime: document.getElementById("Goal").value,
+    Font: document.querySelector('input[name="font"]:checked')?.id,
+    HF: document.querySelector('input[name="Handfree"]:checked')?.id
   };
-  var obj = JSON.stringify(obj);
-  localStorage.setItem('Settings', obj);
+  localStorage.setItem('Settings', JSON.stringify(obj));
 }
 
 //保存
@@ -385,4 +380,3 @@ textboxes.forEach(el => {
     saveData();
   });
 });
-
