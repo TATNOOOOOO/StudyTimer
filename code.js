@@ -1,10 +1,12 @@
+
 // Timer globals
-let stat = "stop"; // stop, CD, CU, cancel
+let stat = "stop"; // stop, CD, CU, rest, cancel
 let hh = 0;
 let mm = 0;
 let ss = 0;
 let totalSec = 0;
 let goalReached = false;
+let cycle = 0;
 
 const Timer = document.getElementById("Timer-txt");
 const gauge = document.querySelector(".gauge-value");
@@ -18,13 +20,35 @@ const clicks = document.querySelectorAll("[type=radio]");
 const passedTxt = document.querySelector(".TimePassedTxt");
 const passedSection = document.querySelector(".TimePassed");
 const float = document.querySelector(".float");
+const STime = document.getElementById("StudyTime").value;
+const RTime = document.getElementById("RestTime").value;
 
 // Sounds
 const TimerEnd = new Audio("./sounds/Timer-End.mp3");
 const Select = new Audio("./sounds/select.mp3");
 const SBtnSound = new Audio("./sounds/Start.mp3");
+const CBtnSound = new Audio("./sounds/clearBtn.mp3");
 
 let intervalId = null;
+
+function loadData() {
+  var jsonObj = localStorage.getItem('Settings');
+  var jsObj = JSON.parse(jsonObj);
+  document.getElementById(jsObj.Count).checked = true;
+  document.getElementById(jsObj.Font).checked = true;
+  document.getElementById(jsObj.HF).checked = true;
+  document.getElementById("StudyTime").value = jsObj.STime;
+  document.getElementById("RestTime").value = jsObj.RTime;
+  document.getElementById("Goal").value = jsObj.GTime;
+}
+
+//読み込み終わった後にlocalstorageをロード
+window.addEventListener("load", () => {
+  if (localStorage.getItem("Settings") !== null) {
+    loadData();
+  }
+});
+
 
 clicks.forEach(el => {
   el.addEventListener("change", () => {
@@ -73,43 +97,50 @@ function toggleTime() {
   }
 }
 
-radioC.forEach(r => r.addEventListener("change", toggleTime));
+radioC.forEach(r => r.addEventListener("change", () => {
+  toggleTime();
+}));
 toggleTime();
 
 // Fonts
 const radioF = document.querySelectorAll('[name="font"]');
+const mqSmall = window.matchMedia("(max-width: 650px)");
 
 function changeFont() {
+  const scale = mqSmall.matches ? 0.5 : 1;
+  let baseSize = 200;
   if (document.getElementById("ShareTech").checked) {
     Timer.style.fontFamily = '"Share Tech", sans-serif';
-    Timer.style.fontSize = "200px";
+    baseSize = 200;
   } else if (document.getElementById("Quantico").checked) {
     Timer.style.fontFamily = '"Quantico", sans-serif';
-    Timer.style.fontSize = "150px";
+    baseSize = 150;
   } else if (document.getElementById("Geo").checked) {
     Timer.style.fontFamily = '"Geo", sans-serif';
-    Timer.style.fontSize = "200px";
+    baseSize = 200;
   } else if (document.getElementById("MajorMonoDisplay").checked) {
     Timer.style.fontFamily = '"Major Mono Display", monospace';
-    Timer.style.fontSize = "120px";
+    baseSize = 120;
   } else if (document.getElementById("Offside").checked) {
     Timer.style.fontFamily = '"Offside", sans-serif';
-    Timer.style.fontSize = "150px";
+    baseSize = 150;
   } else if (document.getElementById("Plaster").checked) {
     Timer.style.fontFamily = '"Plaster", sans-serif';
-    Timer.style.fontSize = "110px";
+    baseSize = 110;
   } else if (document.getElementById("RibeyeMarrow").checked) {
     Timer.style.fontFamily = '"Ribeye Marrow", serif';
-    Timer.style.fontSize = "150px";
+    baseSize = 150;
   }
+  Timer.style.fontSize = `${baseSize * scale}px`;
 }
 
 radioF.forEach(r => r.addEventListener("change", changeFont));
+mqSmall.addEventListener("change", changeFont);
 changeFont();
 
 // Fix to top while running
 function VisibleSettings() {
-  const isRunning = stat === "CD" || stat === "CU";
+  const isRunning = stat === "CD" || stat === "CU" || stat === "rest";
   settings.classList.toggle("is-hidden", isRunning);
   float.classList.toggle("is-hidden", isRunning);
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -170,11 +201,34 @@ SBtn.addEventListener("click", () => {
       }
     } else {
       // Count down
+      if (stat === "CD") {
+        mm = STime;
+      } else {
+        mm = RTime;
+      }
+      mm = STime;
+      cycle++;
+      btnToStop();
+      stat = "CD";
+      VisibleSettings();
+      if (!intervalId) {
+        intervalId = setInterval(() => {
+          if (stat !== "cancel") {
+            CountDown();
+          } else {
+            clearInterval(intervalId);
+            intervalId = null;
+            stat = "stop";
+          }
+        }, 1000);
+      }
     }
   } else {
     stat = "cancel";
     btnToStart();
     VisibleSettings();
+    cycle = 0;
+    resetPassed();
   }
 });
 
@@ -229,3 +283,106 @@ function countUp() {
 
   RTimer();
 }
+
+function getStudySeconds() {
+  const minutes = Number(studyInput.value);
+  return Number.isFinite(minutes) && minutes > 0 ? minutes * 60 : 0;
+}
+
+function CountDown() {
+  passedSection.style.display = "block";
+  passedTxt.textContent = `Cycle(s):${cycle}`;
+  if (hh === 0 && mm === 0 && ss === 0) {
+    // 終わり
+  } else {
+    const total = hh * 3600 + mm * 60 + ss - 1;
+    hh = Math.floor(total / 3600);
+    mm = Math.floor((total % 3600) / 60);
+    ss = total % 60;
+  }
+  totalSec = stat === "CD" ? (STime * 60) - (hh * 3600 + mm * 60 + ss) : hh * 3600 + mm * 60 + ss;
+  const SRsec = stat === "CD" ? STime * 60 : RTime * 60;
+  updateGauge(totalSec, SRsec);
+    if (hh === 0 && mm === 0 && ss === 0) {
+    if (!goalReached) {
+      goalReached = true;
+      if (HFOff.checked) {
+        TimerEnd.currentTime = 0;
+        TimerEnd.play();
+        let ok2;
+        if (stat === "rest") {
+          ok2 = confirm("休憩時間が終了しました。続けますか？");
+        } else {
+          ok2 = confirm("勉強時間が終了しました。続けますか？");
+        }
+        if (!ok2) {
+          stat = "cancel";
+        } else {
+          mm = stat === "CD" ? RTime : STime;
+          stat = stat === "CD" ? "rest" : "CD";
+          cycle = stat === "CD" ? cycle + 1 : cycle;
+          goalReached = null;
+        }
+      } else {
+        if (stat === "rest") {
+          TimerEnd.currentTime = 0;
+          TimerEnd.play();
+        }
+        mm = stat === "CD" ? RTime : STime;
+        stat = stat === "CD" ? "rest" : "CD";
+        cycle = stat === "CD" ? cycle + 1 : cycle;
+        goalReached = null;
+      }
+    }
+  } else {
+    
+  }
+  RTimer();
+}
+
+//データクリアボタン
+CBtn = document.getElementById("clearBtn");
+CBtn.addEventListener("click", () => {
+  CBtnSound.currentTime = 0;
+  CBtnSound.play();
+  const confirmClear = confirm("本当にデータを削除してもよろしいですか？");
+  if (confirmClear) {
+    localStorage.clear();
+  }
+});
+
+//データのあれこれ
+//保存の変数
+const Dcount = document.querySelector('input[name="Count-R"]:checked').id;
+const Dfont = document.querySelector('input[name="font"]:checked').id;
+const DHF = document.querySelector('input[name="Handfree"]:checked').id;
+
+function saveData() {
+  var obj = {
+    Count: Dcount,
+    STime: STime,
+    RTime: RTime,
+    GTime: GTime,
+    Font: Dfont,
+    HF: DHF
+  };
+  var obj = JSON.stringify(obj);
+  localStorage.setItem('Settings', obj);
+}
+
+//保存
+const radios = document.querySelectorAll('input[type="radio"][name="Count-R"], input[type="radio"][name="font"], input[type="radio"][name="Handfree"]');
+const textboxes = document.querySelectorAll('input[type="text"]');
+
+radios.forEach(el => {
+  el.addEventListener("change", () => {
+    saveData();
+  });
+});
+
+textboxes.forEach(el => {
+  el.addEventListener("input", () => {
+    saveData();
+  });
+});
+
