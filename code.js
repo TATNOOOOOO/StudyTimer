@@ -20,8 +20,15 @@ const clicks = document.querySelectorAll("[type=radio]");
 const passedTxt = document.querySelector(".TimePassedTxt");
 const passedSection = document.querySelector(".TimePassed");
 const float = document.querySelector(".float");
-const STime = document.getElementById("StudyTime").value;
-const RTime = document.getElementById("RestTime").value;
+function getStudyMinutes() {
+  const minutes = Number(studyInput.value);
+  return Number.isFinite(minutes) && minutes > 0 ? minutes : 0;
+}
+
+function getRestMinutes() {
+  const minutes = Number(restInput.value);
+  return Number.isFinite(minutes) && minutes > 0 ? minutes : 0;
+}
 
 // Sounds
 const TimerEnd = new Audio("./sounds/Timer-End.mp3");
@@ -203,11 +210,11 @@ SBtn.addEventListener("click", () => {
     } else {
       // Count down
       if (stat === "CD") {
-        mm = STime;
+        mm = getStudyMinutes();
       } else {
-        mm = RTime;
+        mm = getRestMinutes();
       }
-      mm = STime;
+      mm = getStudyMinutes();
       cycle++;
       btnToStop();
       stat = "CD";
@@ -301,8 +308,10 @@ function CountDown() {
     mm = Math.floor((total % 3600) / 60);
     ss = total % 60;
   }
-  totalSec = stat === "CD" ? (STime * 60) - (hh * 3600 + mm * 60 + ss) : hh * 3600 + mm * 60 + ss;
-  const SRsec = stat === "CD" ? STime * 60 : RTime * 60;
+  const studyMin = getStudyMinutes();
+  const restMin = getRestMinutes();
+  totalSec = stat === "CD" ? (studyMin * 60) - (hh * 3600 + mm * 60 + ss) : hh * 3600 + mm * 60 + ss;
+  const SRsec = stat === "CD" ? studyMin * 60 : restMin * 60;
   updateGauge(totalSec, SRsec);
     if (hh === 0 && mm === 0 && ss === 0) {
     if (!goalReached) {
@@ -319,7 +328,7 @@ function CountDown() {
         if (!ok2) {
           stat = "cancel";
         } else {
-          mm = stat === "CD" ? RTime : STime;
+          mm = stat === "CD" ? getRestMinutes() : getStudyMinutes();
           stat = stat === "CD" ? "rest" : "CD";
           cycle = stat === "CD" ? cycle + 1 : cycle;
           goalReached = null;
@@ -329,7 +338,7 @@ function CountDown() {
           TimerEnd.currentTime = 0;
           TimerEnd.play();
         }
-        mm = stat === "CD" ? RTime : STime;
+        mm = stat === "CD" ? getRestMinutes() : getStudyMinutes();
         stat = stat === "CD" ? "rest" : "CD";
         cycle = stat === "CD" ? cycle + 1 : cycle;
         goalReached = null;
