@@ -1,5 +1,5 @@
 html {
-    height: 5000%;
+    height: 3000px;
 }
 
 header {
@@ -248,4 +248,115 @@ header {
 }
 #TBtn.Stop2 {
     color: #ffffff;
+}
+
+#clearBtn {
+    padding: 10px 36px;
+    font-size: 28px;
+    font-family: "Share Tech", sans-serif;
+    color: #ffffff;
+    background-color: #e95464;
+    border: 2px solid #e95464;
+    border-radius: 10px;
+    cursor: pointer;
+}
+#clearBtn:hover {
+    filter: brightness(0.95);
+}
+#clearBtn:active {
+    transform: translateY(1px);
+}
+
+.br {
+    display: none;
+}
+
+/* レスポンシブ対応とかいう地獄の作業（サイズ変更するだけだから楽（サボってるだけ）） */
+@media screen and (min-width: 650px) and (max-width: 899px) {
+    header {
+        padding-left: 33.33px;
+    }
+    #Timer {
+        width: 233.33px;
+    }
+    .gauge {
+        width: 533.33px;
+    }
+    #Settings {
+        padding: 0 33.33px;
+    }
+    .checkbox a {
+        padding-left: 46.67px;
+    }
+    .Fonts select {
+        width: 213.33px;
+        padding: 4px 9.33px;
+    }
+}
+@media screen and (min-width: 100px) and (max-width: 649px) {
+    header {
+        padding-left: 33.33px;
+        font-size: 13.33px;
+    }
+    #Timer {
+        width: 233.33px;
+    }
+    #Timer-txt {
+        font-size: 133.33px;
+    }
+    .gauge {
+        width: 533.33px;
+    }
+    .SubTxt {
+        font-size: 20px;
+    }
+    #Settings {
+        padding: 0 33.33px;
+        font-size: 33.33px;
+    }
+    #Settings h5 {
+        font-size: 33.33px;
+    }
+    .checkbox a {
+        padding-left: 46.67px;
+    }
+    .text {
+        width: 40px;
+        height: 26.67px;
+        font-size: 20px;
+        border-width: 1.33px;
+        border-radius: 4px;
+    }
+    .Fonts select {
+        width: 213.33px;
+        height: 32px;
+        padding: 4px 9.33px;
+        font-size: 16px;
+        border-width: 1.33px;
+        border-radius: 5.33px;
+    }
+    .Fonts .font-option {
+        font-size: 21.33px;
+    }
+    .Fonts .font-option input {
+        width: 17.33px;
+        height: 17.33px;
+    }
+    .checkbox-icon {
+        width: 20px;
+        height: 20px;
+    }
+    #TBtn {
+        font-size: 18.67px;
+        padding: 6.67px 24px;
+        border-width: 1.33px;
+    }
+    #clearBtn {
+        font-size: 18.67px;
+        padding: 6.67px 24px;
+        border-width: 1.33px;
+    }
+    .br {
+        display: block;
+    }
 }
