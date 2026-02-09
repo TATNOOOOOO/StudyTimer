@@ -349,6 +349,7 @@ CBtn.addEventListener("click", () => {
   const confirmClear = confirm("本当にデータを削除してもよろしいですか？");
   if (confirmClear) {
     localStorage.clear();
+    location.reload();
   }
 });
 
