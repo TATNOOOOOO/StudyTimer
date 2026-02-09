@@ -293,7 +293,7 @@ header {
         padding: 4px 9.33px;
     }
 }
-@media screen and (min-width: 100px) and (max-width: 649px) {
+@media screen and (min-width: 600px) and (max-width: 649px) {
     header {
         padding-left: 33.33px;
         font-size: 13.33px;
@@ -360,3 +360,74 @@ header {
         display: block;
     }
 }
+@media screen and (min-width: 200px) and (max-width: 599px) {
+    header {
+        padding-left: 33.33px;
+        font-size: 13.33px;
+    }
+    #Timer {
+        width: 233.33px;
+        margin: 100px auto;
+    }
+    #Timer-txt {
+        font-size: 133.33px;
+    }
+    .gauge {
+        width: 270px;
+        margin: -15px auto;
+    }
+    .SubTxt {
+        font-size: 20px;
+    }
+    #Settings {
+        padding: 0 33.33px;
+        font-size: 33.33px;
+    }
+    #Settings h5 {
+        font-size: 33.33px;
+    }
+    .checkbox a {
+        padding-left: 46.67px;
+    }
+    .text {
+        width: 40px;
+        height: 26.67px;
+        font-size: 20px;
+        border-width: 1.33px;
+        border-radius: 4px;
+    }
+    .Fonts select {
+        width: 213.33px;
+        height: 32px;
+        padding: 4px 9.33px;
+        font-size: 16px;
+        border-width: 1.33px;
+        border-radius: 5.33px;
+    }
+    .Fonts .font-option {
+        font-size: 21.33px;
+    }
+    .Fonts .font-option input {
+        width: 17.33px;
+        height: 17.33px;
+    }
+    .checkbox-icon {
+        width: 20px;
+        height: 20px;
+    }
+    #TBtn {
+        font-size: 18.67px;
+        padding: 6.67px 24px;
+        border-width: 1.33px;
+        margin: 100px auto;
+    }
+    #clearBtn {
+        font-size: 18.67px;
+        padding: 6.67px 24px;
+        border-width: 1.33px;
+    }
+    .br {
+        display: block;
+    }
+}
+
