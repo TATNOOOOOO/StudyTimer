@@ -367,7 +367,7 @@ header {
     }
     #Timer {
         width: 233.33px;
-        margin: 100px auto;
+        margin: 60px auto;
     }
     #Timer-txt {
         font-size: 133.33px;
@@ -428,6 +428,9 @@ header {
     }
     .br {
         display: block;
+    }
+    section.TimePassed {
+        top: 300px;
     }
 }
 
